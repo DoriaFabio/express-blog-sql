@@ -99,9 +99,8 @@ function modify(req, res) {
 }
 
 function destroy(req, res) {
-  const id = parseInt(req.params.id);
-  const index = posts.findIndex((item) => item.id === id);
-  const sql = "DELETE * FROM blog_db.posts WHERE `id` = ?";
+  const { id } = req.params;
+  const sql = "DELETE FROM blog_db.posts WHERE `id` = ?";
   connection.query(sql, [id], (err, results) => {
     if (err) return res.status(500).json({ error: "Database query failed" });
     res.sendStatus(204);
