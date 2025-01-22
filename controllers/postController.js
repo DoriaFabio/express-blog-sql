@@ -19,19 +19,15 @@ function index(req, res) {
 
 function show(req, res) {
   const id = parseInt(req.params.id);
-  const item = posts.find((item) => item.id === id);
-  if (item) {
-    res.json({
-      success: true,
-      item,
-    });
-  } else {
-    res.status(404);
-    res.json({
-      success: false,
-      message: "Il post non esiste",
-    });
-  }
+  const sql = "SELECT * FROM blog_db.posts WHERE `id` = ?";
+  connection.query(sql, [id], (err, results) => {
+    if(err) return res.status(500).json({ error: "Database query failed"});
+    const item = results[0];
+    if(!item) {
+      return res.status(404).json({ error: "L'elemento non esiste" });
+    }
+    res.json({ success: true, item });
+  });
 }
 
 function store(req, res) {
