@@ -90,16 +90,11 @@ function modify(req, res) {
 function destroy(req, res) {
   const id = parseInt(req.params.id);
   const index = posts.findIndex((item) => item.id === id);
-  if (index !== -1) {
-    posts.splice(index, 1);
+  const sql = "DELETE * FROM blog_db.posts WHERE `id` = ?";
+  connection.query(sql, [id], (err, results) => {
+    if(err) return res.status(500).json({ error: "Database query failed" });
     res.sendStatus(204);
-  } else {
-    res.status(404);
-    res.json({
-      error: "404",
-      message: "Post non trovato",
-    });
-  }
+  });
 }
 
 export { index, show, store, update, modify, destroy };
